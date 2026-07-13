@@ -28,7 +28,17 @@ uploaded = st.file_uploader(
 
 if uploaded is not None:
 
-    df = pd.read_csv(uploaded)
+import pandas as pd
+
+try:
+    df = pd.read_csv(uploaded, encoding="utf-8")
+except UnicodeDecodeError:
+    try:
+        uploaded.seek(0)
+        df = pd.read_csv(uploaded, encoding="cp949")
+    except UnicodeDecodeError:
+        uploaded.seek(0)
+        df = pd.read_csv(uploaded, encoding="euc-kr")
 
     st.success("데이터 업로드 완료")
 
